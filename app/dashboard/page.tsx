@@ -9,13 +9,6 @@ export default function Page() {
 	const { user, isUserLoading } = useUser();
 	const { logout } = useDescope();
 
-    // Redirect to login if not authenticated
-    useEffect(() => {
-        if (!(isSessionLoading || isUserLoading) && !isAuthenticated) {
-            window.location.href = '/login';
-        } 
-    });
-    
 	const handleLogout = useCallback(() => {
 		logout();
 	}, [logout]);
