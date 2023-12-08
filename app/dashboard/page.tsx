@@ -1,7 +1,7 @@
 'use client'
 
 import { useDescope, useSession, useUser } from "@descope/react-sdk"
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 export default function Page() {
 
@@ -11,6 +11,7 @@ export default function Page() {
 
 	const handleLogout = useCallback(() => {
 		logout();
+		window.location.href = '/';
 	}, [logout]);
 
     if (isSessionLoading || isUserLoading) {
