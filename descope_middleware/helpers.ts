@@ -79,7 +79,7 @@ async function validateJwt(jwt: string): Promise<any> {
      * @param sessionToken session JWT to validate
      * @returns AuthenticationInfo promise or throws Error if there is an issue with JWTs
      */
-  export async function validateSessionToken(sessionToken: string): Promise<any> {
+  export async function validateSessionToken(sessionToken: string | undefined): Promise<any> {
     if (!sessionToken) throw Error('session token is required for validation');
 
     try {
