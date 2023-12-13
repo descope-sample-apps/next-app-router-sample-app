@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
 import type { NextMiddleware, NextRequest } from 'next/server'
-import validateSession from './helpers';
-import { cookies } from 'next/headers'
+import { validateSessionToken, getSessionToken } from './helpers';
 
 const DEFAULT_IGNORED_ROUTES = [`/((?!api|trpc))(_next.*|.+\\.[\\w]+$)`]
 const DEFAULT_API_ROUTES = ['/api/(.*)', '/trpc/(.*)']
 const DEFAULT_PUBLIC_ROUTES = ['/', '/login*', '/signup*']
-const DEFAULT_REDIRECT_URL = '/login';
+const DEFAULT_UNAUTHENTICATED_URL = '/login';
+const DEFAULT_AUTHENTICATED_URL = '/dashboard';
 
 const includesRoute = (route: string, routes: string[]) => {
     return routes.find((x) =>
@@ -31,14 +31,12 @@ export default function DescopeMiddleware(params?: DescopeMiddlewareConfig): Nex
         const isIgnoredRoute = includesRoute(pathName, ignoredRoutes || DEFAULT_IGNORED_ROUTES)
         const isApiRoute = includesRoute(pathName, apiRoutes || DEFAULT_API_ROUTES)
 
-
         // For public routes, ignore
         if (isPublicRoute || isIgnoredRoute) {
             return NextResponse.next();
         }
 
-        const cookieStore = cookies()
-        const sessionJwt = cookieStore.get("DS")?.value;
+        const sessionJwt = getSessionToken(req);
 
         // For API routes, check for auth header
         if (isApiRoute && !sessionJwt) {
@@ -51,10 +49,10 @@ export default function DescopeMiddleware(params?: DescopeMiddlewareConfig): Nex
         }
 
         if (!sessionJwt) {
-            return NextResponse.redirect(new URL(DEFAULT_REDIRECT_URL, req.url))
+            return NextResponse.redirect(new URL(DEFAULT_UNAUTHENTICATED_URL, req.url))
         }
 
-        const isSessionValid = await validateSession(sessionJwt);
+        const isSessionValid = await validateSessionToken(sessionJwt);
 
         if (!isSessionValid) {
             if (isApiRoute) {
@@ -65,7 +63,7 @@ export default function DescopeMiddleware(params?: DescopeMiddlewareConfig): Nex
                     }
                 });
             }
-            return NextResponse.redirect(new URL(DEFAULT_REDIRECT_URL, req.url))
+            return NextResponse.redirect(new URL(DEFAULT_UNAUTHENTICATED_URL, req.url))
         }
 
         return NextResponse.next();

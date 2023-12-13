@@ -2,17 +2,18 @@
 
 import { useDescope, useSession, useUser } from "@descope/react-sdk"
 import { useCallback } from "react";
+import { useRouter } from 'next/navigation'
 
 export default function Page() {
 
     const { isAuthenticated, isSessionLoading, sessionToken } = useSession();
 	const { user, isUserLoading } = useUser();
 	const { logout } = useDescope();
-
-	const handleLogout = useCallback(() => {
-		logout();
-		window.location.href = '/';
-	}, [logout]);
+	const router = useRouter()
+	const onLogout = async () => {
+		await logout();
+		router.push('/');
+	}
 
     if (isSessionLoading || isUserLoading) {
 		return <p>Loading...</p>;
@@ -22,7 +23,7 @@ export default function Page() {
 		return (
 			<>
 				<p>Hello {user.name}</p>
-				<button onClick={handleLogout}>Logout</button>
+				<button onClick={onLogout}>Logout</button>
 			</>
 		);
 	}
