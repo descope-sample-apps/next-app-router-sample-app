@@ -1,7 +1,24 @@
-import DescopeMiddleware from "./descope_middleware";
-import { authConfig } from "./auth.config";
+// import DescopeMiddleware from "./descope_middleware";
+// import { authConfig } from "./auth.config";
 
-export default DescopeMiddleware(authConfig);
+import { NextRequest, NextResponse } from "next/server";
+import { getSessionToken, validateSessionToken } from "./descope_middleware/helpers";
+  
+
+export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    const sessionJwt = getSessionToken();
+    const isValid = await validateSessionToken(sessionJwt);
+    if (!isValid) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+  }
+
+  
+  return NextResponse.next()
+}
+
+// export default DescopeMiddleware(authConfig);
 
 export const config = {
   matcher: [
@@ -19,19 +36,3 @@ export const config = {
 
   
 
-
-// import { NextRequest, NextResponse } from "next/server";
-// import { getSessionToken, validateSessionToken } from "./descope_middleware/helpers";
-  
-
-// export async function middleware(request: NextRequest) {
-//   if (request.nextUrl.pathname.startsWith('/dashboard')) {
-//     const sessionJwt = getSessionToken(request);
-//     const isSessionValid = await validateSessionToken(sessionJwt);
-//     if (!isSessionValid) {
-//       return NextResponse.redirect(new URL('/login', request.url))
-//     }
-//   }
-  
-//   return NextResponse.next()
-// }

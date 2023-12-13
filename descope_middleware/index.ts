@@ -36,8 +36,7 @@ export default function DescopeMiddleware(params?: DescopeMiddlewareConfig): Nex
             return NextResponse.next();
         }
 
-        const sessionJwt = getSessionToken(req);
-        console.log(sessionJwt);
+        const sessionJwt = getSessionToken();
 
         // For API routes, check for auth header
         if (isApiRoute && !sessionJwt) {
