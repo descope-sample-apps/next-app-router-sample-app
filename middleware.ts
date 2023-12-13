@@ -14,6 +14,14 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  if (request.nextUrl.pathname === '/') {
+    const sessionJwt = getSessionToken();
+    const isValid = await validateSessionToken(sessionJwt);
+    if (isValid) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+  }
+
   return NextResponse.next()
 }
 
