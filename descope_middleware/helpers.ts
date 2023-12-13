@@ -1,6 +1,5 @@
 
 import { cookies } from "next/headers";
-import { NextRequest } from "next/server";
 
 if (!process.env.NEXT_PUBLIC_DESCOPE_PROJECT_ID) {
     throw Error('NEXT_PUBLIC_DESCOPE_PROJECT_ID is required');
@@ -72,7 +71,6 @@ export async function validateSessionToken(sessionToken: string | undefined): Pr
 
 /**
  * Gets the session token from cookies
- * @param req NextRequest to validate
  * @returns the session token
  */
  export const getSessionToken = () => {
