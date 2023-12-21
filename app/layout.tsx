@@ -24,6 +24,7 @@ export default function RootLayout({
   return (
     <AuthProvider
       projectId={process.env.NEXT_PUBLIC_DESCOPE_PROJECT_ID}
+      baseUrl={process.env.NEXT_PUBLIC_DESCOPE_BASE_URL}
     >
       <html lang="en">
         <body className={inter.className}>
