@@ -4,6 +4,9 @@ import { getServerSession, getServerSessionUser } from "@/lib/helpers";
 export default async function Page() {
 	const session = await getServerSession();
 	const user = await getServerSessionUser();
+	if (!session) {
+		return <p>No session found</p>;
+	}
 
 	if (user) {
 		return <>
@@ -11,8 +14,10 @@ export default async function Page() {
 			<LogoutButton/>
 		</>;
 	
+	} else {
+		return <p>Error getting user</p>;
+	
 	}
-	return <p>You are not logged in</p>;
 }
 
 
