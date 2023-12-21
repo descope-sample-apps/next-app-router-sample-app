@@ -4,6 +4,7 @@ import { getServerSession, getServerSessionUser } from "@/lib/helpers";
 export default async function Page() {
 	const session = await getServerSession();
 	const user = await getServerSessionUser();
+
 	if (!session) {
 		return <p>No session found</p>;
 	}
@@ -16,7 +17,6 @@ export default async function Page() {
 	
 	} else {
 		return <p>Error getting user</p>;
-	
 	}
 }
 
