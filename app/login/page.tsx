@@ -8,6 +8,7 @@ export default function Page() {
 
     const { isAuthenticated, isSessionLoading } = useSession();
 	const { isUserLoading } = useUser();
+    
     // Redirect to login if not authenticated
     useEffect(() => {
         if (!(isSessionLoading || isUserLoading) && isAuthenticated) {
